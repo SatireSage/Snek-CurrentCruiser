@@ -12,7 +12,6 @@ cache = {
 }
 MAX_FPS = 1000
 
-
 def get_image(path):
     if path not in cache['images']:
         cache['images'][path] = pygame.image.load(path)
@@ -60,7 +59,7 @@ class Bird(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.gravity = 0.25
+        self.gravity = 0.25 # change
         self.velocity = 0
 
     def update(self):
@@ -79,9 +78,11 @@ class Pipe(pygame.sprite.Sprite):
         self.crossed = False
 
 
-def spawn_pipes():
+def spawn_pipes(sets_of_ten):
     pipe_width = SCREEN_WIDTH // 10
-    pipe_gap = SCREEN_HEIGHT // 3
+
+    pipe_gap = SCREEN_HEIGHT // (3  + sets_of_ten) # change that as time goes by
+
     min_pipe_height = SCREEN_HEIGHT // 8
     max_pipe_height = SCREEN_HEIGHT // 2
     x = SCREEN_WIDTH
@@ -163,10 +164,11 @@ def game_loop():
     bird = Bird(SCREEN_WIDTH // 2 - (SCREEN_WIDTH // 18) // 2, SCREEN_HEIGHT // 2 - (SCREEN_HEIGHT // 32) // 2)
     bird_group = pygame.sprite.Group()
     bird_group.add(bird)
+    sets_of_ten = 0
 
-    pipe_speed = 2
-    game_speed = 120
-    pipes = spawn_pipes()
+    pipe_speed = 2 #change
+    game_speed = 120 + sets_of_ten
+    pipes = spawn_pipes(sets_of_ten)
     pipe_group = pygame.sprite.Group()
     pipe_group.add(pipes)
 
@@ -194,11 +196,11 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pygame.mixer.Sound.play(move_sound)
-                    bird.velocity = -7
+                    bird.velocity = -7 # change
                 if event.key == pygame.K_p:  # Pause the game when 'P' is pressed
                     pause_game()
             if event.type == pipe_spawn_timer:
-                pipes = spawn_pipes()
+                pipes = spawn_pipes(sets_of_ten)
                 pipe_group.add(pipes)
 
         if dt >= update_interval:
@@ -210,6 +212,8 @@ def game_loop():
             if pipe.rect.bottom < SCREEN_HEIGHT and pipe.rect.right < bird.rect.left:
                 if not pipe.crossed:
                     score += 1
+                    if (score % 10) == 0:
+                        sets_of_ten += 0.5
                     pipe.crossed = True
 
         if pygame.sprite.spritecollide(bird, pipe_group,
