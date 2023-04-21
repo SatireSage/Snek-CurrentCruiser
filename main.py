@@ -147,12 +147,12 @@ def main_menu(score):
     while not game_started:
         screen.fill(colors['black'])
 
-        draw_message("Press SPACE to start. Press Q to quit", colors['white'])
+        draw_message("Press ENTER to start. Press Q to quit", colors['white'])
         print_previous_score(score)
         pygame.display.update()
 
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 pygame.mixer.music.stop()
                 game_started = True
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
