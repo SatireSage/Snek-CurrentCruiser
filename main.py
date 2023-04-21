@@ -81,7 +81,7 @@ class Pipe(pygame.sprite.Sprite):
 
 def spawn_pipes():
     pipe_width = SCREEN_WIDTH // 10
-    pipe_gap = SCREEN_HEIGHT // 4
+    pipe_gap = SCREEN_HEIGHT // 3
     min_pipe_height = SCREEN_HEIGHT // 8
     max_pipe_height = SCREEN_HEIGHT // 2
     x = SCREEN_WIDTH
@@ -109,14 +109,15 @@ def draw_score(surface, score_value):
 
 
 def draw_message(message, color):
-    text = font.render(message, True, color)
+    text = get_text(message, "Aerial", 30, color)
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     screen.blit(text, text_rect)
 
 
 def print_previous_score(score):
-    score_msg = font.render(f"Previous Score: {score}", True, colors['white'])
+    message = f"Previous Score: {score}"
+    score_msg = get_text(message, "Aerial", 30, colors['white'])
     score_rect = score_msg.get_rect()
     score_rect.center = (SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2) + 50)
     screen.blit(score_msg, score_rect)
@@ -164,6 +165,7 @@ def game_loop():
     bird_group.add(bird)
 
     pipe_speed = 2
+    game_speed = 120
     pipes = spawn_pipes()
     pipe_group = pygame.sprite.Group()
     pipe_group.add(pipes)
@@ -177,7 +179,13 @@ def game_loop():
     crash_sound = get_sound(os.path.join(s, 'hit.wav'))
     move_sound = get_sound(os.path.join(s, 'move.wav'))
 
+    last_update_time = pygame.time.get_ticks()
+    update_interval = 1000 / game_speed
+
     while True:
+        current_time = pygame.time.get_ticks()
+        dt = current_time - last_update_time
+
         screen.fill((0, 0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -193,8 +201,10 @@ def game_loop():
                 pipes = spawn_pipes()
                 pipe_group.add(pipes)
 
-        bird_group.update()
-        move_pipes(pipe_group, pipe_speed)
+        if dt >= update_interval:
+            bird_group.update()
+            move_pipes(pipe_group, pipe_speed)
+            last_update_time = current_time
 
         for pipe in pipe_group.sprites():
             if pipe.rect.bottom < SCREEN_HEIGHT and pipe.rect.right < bird.rect.left:
@@ -212,10 +222,7 @@ def game_loop():
         pipe_group.draw(screen)
         draw_score(screen, score)
         pygame.display.flip()
-        clock.tick(120)
-
-        fps = int(clock.get_fps())
-        pygame.display.set_caption(f"Flappy Bird - FPS: {fps}")
+        clock.tick(MAX_FPS)
 
 
 if __name__ == "__main__":
