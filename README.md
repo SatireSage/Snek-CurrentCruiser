@@ -27,8 +27,6 @@ Players direct the snake's movement, striving to collect items that randomly app
 
 The game concludes when the snake collides with its body or the screen's boundaries. Your score is determined by the number of items collected.
 
-![Snek Gameplay](https://chat.openai.com/assets/snek_gameplay.png)
-
 ### Controls (Snek)
 
 - Up Arrow: Propel the snake upwards
@@ -63,8 +61,6 @@ CurrentCruiser draws inspiration from the wildly popular Flappy Bird game. It's 
 ### Gameplay (CurrentCruiser)
 
 Players manipulate the bird's altitude by tapping the screen or pressing a key. The bird perpetually moves forward, and the objective is to skillfully navigate through openings in the columns of pipes. Colliding with a pipe or the ground ends the game, and your score is based on the number of gaps successfully traversed.
-
-![CurrentCruiser Gameplay](https://chat.openai.com/assets/currentcruiser_gameplay.png)
 
 ### Controls (CurrentCruiser)
 
